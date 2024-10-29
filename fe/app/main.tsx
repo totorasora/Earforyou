@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { View, Text, Button, Alert } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import API_BASE_URL from "@/common";
+import { useNavigation } from "@react-navigation/native";
 
 export default function MainScreen() {
     const [userToken, setuserToken] = useState<string | null>(null)
+    const navigation = useNavigation(); // useNavigation hook for navigation
 
     const handleProtectedRequest = async () => {
         if (!userToken) {
@@ -27,7 +29,18 @@ export default function MainScreen() {
           Alert.alert("오류", "API 요청 중 오류가 발생했습니다.");
         }
       };
-      
+    
+    const handleLogout = async () => {
+        try {
+          await SecureStore.deleteItemAsync('userToken');
+          Alert.alert("로그아웃", "성공적으로 로그아웃되었습니다.");
+          navigation.navigate("index"); 
+
+        } catch (error) {
+          console.error("로그아웃 오류:", error);
+          Alert.alert("오류", "로그아웃 중 오류가 발생했습니다.");
+        }
+    };
 
     useEffect(() =>{
         const fetchUserToken = async () => {
@@ -41,6 +54,7 @@ export default function MainScreen() {
             <Text>main</Text>
             <Text>token : {userToken}</Text>
             <Button title="보호된 API 요청" onPress={handleProtectedRequest} />
+            <Button title="로그아웃" onPress={handleLogout} />
         </View>
     )
 }
