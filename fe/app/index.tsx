@@ -27,6 +27,12 @@ export default function LoginScreen() {
         
         // 서버 응답 확인
         console.log("서버 응답:", response);
+        if (response && response.ok) { 
+          Alert.alert("회원가입되었습니다", "Welcome!");
+          navigation.navigate('index')
+        } else {
+          
+        }
 
         if (response && response.ok) { 
           // 응답 데이터 파싱
@@ -53,6 +59,10 @@ export default function LoginScreen() {
     }
 };
 
+const moveSingUp = () => {
+  navigation.navigate("Signup"); // Signup 화면으로 이동
+}
+
 
   return (
     <View style={styles.container}>
@@ -78,11 +88,18 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      {/* 로그인 버튼 */}
-      <Button
-        title="로그인"
-        onPress={handleLogin}
-      />
+      <View>
+        {/* 로그인 버튼 */}
+        <Button
+            title="로그인"
+            onPress={handleLogin}
+          />
+      </View>
+      <View style={styles.signup}>
+         <Button
+          title="회원가입"
+          onPress={moveSingUp}/>
+      </View>
     </View>
   );
 }
@@ -110,4 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
   },
+  signup: {
+    marginTop: 10, 
+  }
 });

@@ -4,6 +4,13 @@ import * as SecureStore from 'expo-secure-store';
 import API_BASE_URL from "@/common";
 import { useNavigation } from "@react-navigation/native";
 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // 추가된 import
+import HomeScreen from "./HomeScreen";
+import BoardScreen from "./BoardScreen"; // 게시판 스크린 컴포넌트
+import MyInfoScreen from "./MyInfoScreen"; // 내 정보 스크린 컴포넌트
+
+const Tab = createBottomTabNavigator(); // 탭 내비게이터 생성
+
 export default function MainScreen() {
     const [userToken, setuserToken] = useState<string | null>(null)
     const navigation = useNavigation(); // useNavigation hook for navigation
@@ -50,11 +57,32 @@ export default function MainScreen() {
         fetchUserToken()
     }, [])
     return (
-        <View>
-            <Text>main</Text>
-            <Text>token : {userToken}</Text>
-            <Button title="보호된 API 요청" onPress={handleProtectedRequest} />
-            <Button title="로그아웃" onPress={handleLogout} />
-        </View>
+        <Tab.Navigator
+        screenOptions={{
+          tabBarIcon: () => null, // 아이콘을 표시하지 않도록 설정
+          tabBarLabelStyle: {
+            paddingBottom: 10, // 여백 조정으로 아이콘 없는 상태에 맞춤
+            fontSize: 14,      // 원하는 크기로 조정
+          },
+          tabBarStyle: {
+              height: 50, // 탭 높이를 조정하여 아이콘 없이 깔끔하게 표현
+          },
+      }}>
+            <Tab.Screen 
+                name="Home" 
+                component={HomeScreen} 
+                options={{ tabBarLabel: "홈" }} // Optional: Set a label for the tab
+            />
+            <Tab.Screen 
+                name="Bbs" 
+                component={BoardScreen} 
+                options={{ tabBarLabel: "게시판" }} // Optional: Set a label for the tab
+            />
+            <Tab.Screen 
+                name="MyInfo" 
+                component={MyInfoScreen} 
+                options={{ tabBarLabel: "내 정보" }} // Optional: Set a label for the tab
+            />
+        </Tab.Navigator>
     )
 }
